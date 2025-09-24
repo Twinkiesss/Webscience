@@ -1,0 +1,98 @@
+body {
+    font-family: Arial;
+    margin: 20px;
+    background-color: rgba(40, 47, 61, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px; /*внешняя нижняя*/
+    padding: 15px; /*внутри*/
+    background-color: white;
+    border-radius: 8px;
+}
+header h1 {
+    font-family: cursive;
+    color: #2c3e50;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+#plot-container, #input-form, #results {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#data-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+#data-form input[type="text"],
+#data-form select {
+    margin-top: 5px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid white;
+    border-radius: 4px;
+}
+.r-buttons {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+}
+.r-buttons button {
+    padding: 6px 10px;
+    border: 1px solid #3498db;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.r-buttons button.active {
+    background-color: #3498db;
+    color: white;
+}
+#data-form button {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+#submit-btn {
+    background-color: #43b4be;
+    color: white;
+}
+#clear-btn {
+    background-color: #43b4be;
+    color: white;
+}
+
+#results {
+    min-width: 500px;
+}
+#results-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#results-table th,
+#results-table td {
+    border: 1px solid white;
+    padding: 6px;
+    text-align: center;
+}
+#results-table th {
+    background-color: white;
+}
+#results-table tr:nth-child(even) {
+    background-color: white;
+}
+.hit-yes { color: #438bbe; }
+.hit-no { color: #438bbe; }

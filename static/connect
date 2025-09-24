@@ -1,0 +1,3 @@
+ssh -L 8080:localhost:24258 itmo
+httpd -f ~/web/lab1/httpd.conf -k start
+java -jar -DFCGI_PORT=2455 ./httpd-root/fcgi-bin/app.jar

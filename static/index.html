@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <title>Лабораторная работа №1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Кудряшова Татьяна Юрьевна</h1>
+    <h1>Группа: 3215</h1>
+    <h1>Вариант: 408931</h1>
+</header>
+
+<main>
+    <div id="plot-container">
+        <canvas id="plot" width="500" height="500"></canvas>
+    </div>
+
+    <div id="input-form">
+        <h2>Параметры</h2>
+        <form id="data-form">
+            <label for="x-value">Координата X:</label>
+            <input type="text" id="x-value" name="x" placeholder="Число от -5 до 3" autocomplete="off">
+            <br>
+
+            <label for="y-value">Координата Y:</label>
+            <select id="y-value" name="y" required>
+                <option value="" disabled selected>Выберите Y</option>
+                <option value="-2">-2</option>
+                <option value="-1.5">-1.5</option>
+                <option value="-1">-1</option>
+                <option value="-0.5">-0.5</option>
+                <option value="0">0</option>
+                <option value="0.5">0.5</option>
+                <option value="1">1</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2</option>
+            </select>
+            <br>
+
+            <label>Радиус R:</label>
+            <div class="r-buttons">
+                <button type="button" data-r="1">1</button>
+                <button type="button" data-r="1.5">1.5</button>
+                <button type="button" class="active" data-r="2">2</button>
+                <button type="button" data-r="2.5">2.5</button>
+                <button type="button" data-r="3">3</button>
+            </div>
+            <input type="hidden" id="r-value" name="r" value="2">
+
+            <button type="submit" id="submit-btn">Проверить</button>
+            <button type="button" id="clear-btn">Очистить историю</button>
+        </form>
+    </div>
+
+    <!-- Таблица -->
+    <div id="results">
+        <h2>Результаты</h2>
+        <table id="results-table">
+            <thead>
+            <tr>
+                <th>X</th>
+                <th>Y</th>
+                <th>R</th>
+                <th>Попадание</th>
+                <th>Время</th>
+                <th>Время работы (мкс)</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
