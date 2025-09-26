@@ -41,10 +41,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Отправляем JSON вместо FormData
-        const data = { X: x, Y: y, R: r };
+        const data = {X: x, Y: y, R: r};
 
-        fetch('./fcgi-bin/app.jar', {
+        fetch('/fcgi-bin/app.jar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,19 +62,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                let point = {
-                    x: parseFloat(data.result.x),
-                    y: parseFloat(data.result.y),
-                    r: parseFloat(data.result.r),
-                    hit: data.result.hit,
-                    current_time: data.result.current_time,
-                    execution_time: data.result.execution_time
-                };
-                history.push(point);
+                if (data.results && data.results.length > 0) {
+                    let result = data.results[0];
+                    let point = {
+                        x: parseFloat(result.x),
+                        y: parseFloat(result.y),
+                        r: parseFloat(result.r),
+                        hit: result.inArea,
+                        current_time: result.currentTime,
+                        execution_time: result.executionTime
+                    };
 
-                updateResultsTable();
-                drawPlot(currentR);
-                drawPoints();
+                    history.push(point);
+                    updateResultsTable();
+                    drawPlot(currentR);
+                    drawPoints();
+                }
             })
             .catch(error => {
                 console.error('Ошибка при отправке данных:', error);
@@ -84,30 +86,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     clearBtn.addEventListener('click', function () {
-        // Очищаем историю на сервере (дополнительно)
-        fetch('./fcgi-bin/app.jar', {
-            method: 'POST'
-        }).catch(error => console.error('Ошибка очистки:', error));
-
-        // Очищаем локальную историю
         history = [];
         updateResultsTable();
         drawPlot(currentR);
     });
 
-    function checkHit(x, y, r) {
-        // (x>=0, y>=0)
-        if (x >= 0 && y >= 0 && x * x + y * y <= r * r) return true;
-        // (x>=0, y<=0)
-        if (x >= 0 && y <= 0 && x <= r && y >= -r / 2) return true;
-        // (x<=0, y>=0)
-        if (x <= 0 && y >= 0 && y <= x + r) return true;
-        return false;
-    }
-
     function updateResultsTable() {
         resultsTableBody.innerHTML = '';
-        history.forEach(item => {
+        [...history].reverse().forEach(item => {
             let row = document.createElement('tr');
             row.classList.add(item.hit ? 'hit-yes' : 'hit-no');
             row.innerHTML = `
@@ -116,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${item.r}</td>
                 <td>${item.hit ? 'Да' : 'Нет'}</td>
                 <td>${item.current_time}</td>
-                <td>${item.execution_time}</td>
+                <td>${item.execution_time.toFixed(2)} ms</td>
             `;
             resultsTableBody.appendChild(row);
         });
@@ -140,9 +126,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // arrow X
         ctx.beginPath();
-        ctx.moveTo(canvas.width-10, centerY-5);
+        ctx.moveTo(canvas.width - 10, centerY - 5);
         ctx.lineTo(canvas.width, centerY);
-        ctx.lineTo(canvas.width-10, centerY+5);
+        ctx.lineTo(canvas.width - 10, centerY + 5);
         ctx.stroke();
         ctx.closePath();
 
@@ -171,14 +157,14 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.fillText("-R", x1 - 10, centerY + 20);
 
         // -R/2
-        let x2 = centerX - (r/2) * scale;
+        let x2 = centerX - (r / 2) * scale;
         ctx.moveTo(x2, centerY - 5);
         ctx.lineTo(x2, centerY + 5);
         ctx.stroke();
         ctx.fillText("-R/2", x2 - 15, centerY + 20);
 
         // R/2
-        let x3 = centerX + (r/2) * scale;
+        let x3 = centerX + (r / 2) * scale;
         ctx.moveTo(x3, centerY - 5);
         ctx.lineTo(x3, centerY + 5);
         ctx.stroke();
@@ -199,14 +185,14 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.fillText("-R", centerX + 10, y1 + 5);
 
         // -R/2
-        let y2 = centerY + (r/2) * scale;
+        let y2 = centerY + (r / 2) * scale;
         ctx.moveTo(centerX - 5, y2);
         ctx.lineTo(centerX + 5, y2);
         ctx.stroke();
         ctx.fillText("-R/2", centerX + 10, y2 + 5);
 
         // R/2
-        let y3 = centerY - (r/2) * scale;
+        let y3 = centerY - (r / 2) * scale;
         ctx.moveTo(centerX - 5, y3);
         ctx.lineTo(centerX + 5, y3);
         ctx.stroke();
@@ -219,14 +205,13 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
         ctx.fillText("R", centerX + 10, y4 + 5);
 
-
         ctx.fillStyle = "rgba(52, 152, 219,0.4)";
         ctx.strokeStyle = "#2980b9";
 
         // quater of circle
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, r/2 * scale, -Math.PI / 2, 0);
+        ctx.arc(centerX, centerY, r / 2 * scale, -Math.PI / 2, 0);
         ctx.closePath();
         ctx.fill();
 
@@ -236,13 +221,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // triangle
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
-        ctx.lineTo(centerX - r * scale /2, centerY);
-        ctx.lineTo(centerX, centerY + r * scale /2);
+        ctx.lineTo(centerX - r * scale / 2, centerY);
+        ctx.lineTo(centerX, centerY + r * scale / 2);
         ctx.closePath();
         ctx.fill();
     }
 
-    // points
     function drawPoints() {
         let centerX = canvas.width / 2;
         let centerY = canvas.height / 2;

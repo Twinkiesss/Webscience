@@ -29,7 +29,7 @@ public class CoordinatesValidator {
     
     private boolean checkX() {
         return !Double.isNaN(x) && !Double.isInfinite(x) && 
-               (x > X_MIN && x < X_MAX);
+               (x >= X_MIN && x <= X_MAX);
     }
 
     private boolean checkY() {
