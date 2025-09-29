@@ -41,9 +41,6 @@ public class FastCGIServer {
         logger.log(Level.INFO, "FastCGI server stopped");
     }
 
-    /**
-     * Обрабатывает POST запрос
-     */
     private static void handlePostRequest() {
         var contentType = FCGIInterface.request.params.getProperty("CONTENT_TYPE");
         var scriptName = FCGIInterface.request.params.getProperty("SCRIPT_NAME");
@@ -106,7 +103,6 @@ public class FastCGIServer {
 
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        // Создаем результат без привязки к сессии
         Map<String, Object> result = new HashMap<>();
         result.put("x", x);
         result.put("y", y);
@@ -115,7 +111,6 @@ public class FastCGIServer {
         result.put("currentTime", currentTime);
         result.put("executionTime", executionTime);
 
-        // Возвращаем только один результат вместо списка
         List<Map<String, Object>> resultsList = new ArrayList<>();
         resultsList.add(result);
 
@@ -146,7 +141,6 @@ public class FastCGIServer {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(body);
 
-            // Используем те же имена, что и во фронтенде
             if (jsonNode.has("X")) {
                 params.put("X", jsonNode.get("X").asText());
             }
@@ -174,9 +168,6 @@ public class FastCGIServer {
                 jsonBody;
     }
 
-    /**
-     * Строит JSON ответ с результатами
-     */
     private static String buildJsonResponse(List<Map<String, Object>> results) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -189,9 +180,6 @@ public class FastCGIServer {
         }
     }
 
-    /**
-     * Создает ответ с ошибкой в JSON формате
-     */
     private static String errorResult(String message) {
         try {
             ObjectMapper mapper = new ObjectMapper();

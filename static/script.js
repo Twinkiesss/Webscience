@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentR = 2;
     let history = [];
 
+    const toastManager = new ToastManager();
+
     drawPlot(currentR);
 
     rButtons.forEach(button => {
@@ -33,11 +35,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let r = currentR;
 
         if (isNaN(x) || x < -5 || x > 3) {
-            alert("Введите корректное значение X в диапазоне [-5;3]");
+            showError("Введите корректное значение X в диапазоне [-5;3]", 3000);
             return;
         }
         if (isNaN(y)) {
-            alert("Выберите значение Y");
+            showError("Выберите значение Y", 3000);
             return;
         }
 
@@ -58,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 if (data.error) {
-                    alert('Ошибка: ' + data.error);
+                    showError('Ошибка: ' + data.error, 5000);
                     return;
                 }
 
@@ -77,11 +79,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateResultsTable();
                     drawPlot(currentR);
                     drawPoints();
+                    if (point.hit) {
+                        showSuccess(`Точка (${point.x}, ${point.y}) попала в область!`, 3000);
+                    } else {
+                        showWarning(`Точка (${point.x}, ${point.y}) не попала в область`, 3000);
+                    }
                 }
             })
             .catch(error => {
                 console.error('Ошибка при отправке данных:', error);
-                alert('Не удалось отправить данные на сервер: ' + error.message);
+                showError('Не удалось отправить данные на сервер: ' + error.message, 5000);
             });
     });
 
@@ -89,6 +96,19 @@ document.addEventListener('DOMContentLoaded', function () {
         history = [];
         updateResultsTable();
         drawPlot(currentR);
+        showWarning("История результатов очищена", 3000);
+    });
+
+    xInput.addEventListener('input', function() {
+        const value = this.value.replace(',', '.');
+        const numValue = parseFloat(value);
+
+        if (value && (isNaN(numValue) || numValue < -5 || numValue > 3)) {
+            this.style.borderColor = '#be4b43';
+            showWarning("X должен быть числом от -5 до 3", 3000);
+        } else {
+            this.style.borderColor = '';
+        }
     });
 
     function updateResultsTable() {
