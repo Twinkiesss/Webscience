@@ -10,23 +10,19 @@ public class AreaChecker {
 
         if (x >= 0 && y >= 0) {
             boolean inside = x * x + y * y <= r * r;
-            logger.info("Квадрант I (четверть круга): " + inside);
             return inside;
         }
 
         if (x >= 0 && y <= 0) {
             boolean inside = x <= r && y >= -r / 2;
-            logger.info("Квадрант IV (прямоугольник): " + inside);
             return inside;
         }
 
         if (x <= 0 && y <= 0) {
             boolean inside = -r / 2 <= (x + y);
-            logger.info("Квадрант III (треугольник): " + inside);
             return inside;
         }
 
-        logger.info("Квадрант II (всегда мимо)");
         return false;
     }
 }

@@ -8,14 +8,14 @@ class ToastManager {
         const container = document.createElement('div');
         container.className = 'toast-container';
         container.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    `;
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 1000;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        `;
         document.body.appendChild(container);
         return container;
     }
@@ -49,11 +49,11 @@ class ToastManager {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.innerHTML = `
-      <div class="toast-content">
-        <span class="toast-message">${message}</span>
-        <button class="toast-close">×</button>
-      </div>
-    `;
+          <div class="toast-content">
+            <span class="toast-message">${message}</span>
+            <button class="toast-close">×</button>
+          </div>
+        `;
 
         toast.querySelector('.toast-close').addEventListener('click', function() {
             toastManager.hide(toast);

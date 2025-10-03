@@ -188,8 +188,6 @@ main {
     border-left: 4px solid #1565c0;
 }
 
-/* Добавьте эти стили в конец файла style.css */
-
 .toast-container {
     position: fixed;
     top: 20px;

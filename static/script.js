@@ -14,6 +14,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const toastManager = new ToastManager();
 
+    function loadHistoryFromStorage() {
+        const savedHistory = localStorage.getItem('pointsHistory');
+        if (savedHistory) {
+            history = JSON.parse(savedHistory);
+            updateResultsTable();
+            drawPoints();
+        }
+    }
+
+    function saveHistoryToStorage() {
+        localStorage.setItem('pointsHistory', JSON.stringify(history));
+    }
+
+    loadHistoryFromStorage();
+
     drawPlot(currentR);
 
     rButtons.forEach(button => {
@@ -35,11 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let r = currentR;
 
         if (isNaN(x) || x < -5 || x > 3) {
-            showError("Введите корректное значение X в диапазоне [-5;3]", 3000);
+            showToast("Введите корректное значение X в диапазоне [-5;3]", 3000);
             return;
         }
         if (isNaN(y)) {
-            showError("Выберите значение Y", 3000);
+            showToast("Выберите значение Y", 3000);
             return;
         }
 
@@ -60,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 if (data.error) {
-                    showError('Ошибка: ' + data.error, 5000);
+                    showWarning('Ошибка: ' + data.error, 5000);
                     return;
                 }
 
@@ -76,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
 
                     history.push(point);
+                    saveHistoryToStorage();
                     updateResultsTable();
                     drawPlot(currentR);
                     drawPoints();
@@ -88,12 +104,13 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Ошибка при отправке данных:', error);
-                showError('Не удалось отправить данные на сервер: ' + error.message, 5000);
+                showWarning('Не удалось отправить данные на сервер: ' + error.message, 5000);
             });
     });
 
     clearBtn.addEventListener('click', function () {
         history = [];
+        localStorage.removeItem('pointsHistory');
         updateResultsTable();
         drawPlot(currentR);
         showWarning("История результатов очищена", 3000);
@@ -104,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const numValue = parseFloat(value);
 
         if (value && (isNaN(numValue) || numValue < -5 || numValue > 3)) {
-            this.style.borderColor = '#be4b43';
-            showWarning("X должен быть числом от -5 до 3", 3000);
+            this.style.borderColor = 'rgba(26,40,51,0.3)';
+            showToast("X должен быть числом от -5 до 3", 3000);
         } else {
             this.style.borderColor = '';
         }
